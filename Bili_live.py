@@ -216,7 +216,9 @@ class Login_web(object):
         length2 = len(self.share_list)
         counter2 = 0
         if length2 != 0:
+            print("正在分享直播间,由于每次分享有10分钟冷却时间,请耐心等待")
             if length2 > 24:
+                print("分享直播间数量过多,仅取前24个")
                 self.share_list = self.share_list[0:24] 
             for j in self.share_list:
                 roomid = get_real_roomid(j)
