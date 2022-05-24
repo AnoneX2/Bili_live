@@ -117,6 +117,7 @@ class Login_web(object):
         self.cookies_dic = Get_cookies()
         self.cookies = joint_cookies_dic(self.cookies_dic)
         if black_list != []:
+            print("正在处理,请稍等...")
             for i in black_list:
                 self.black_list.append(get_real_roomid(i))
                 time.sleep(2)
