@@ -116,12 +116,12 @@ class Login_web(object):
         self.share_list=share_list
         self.cookies_dic = Get_cookies()
         self.cookies = joint_cookies_dic(self.cookies_dic)
+        self.check = login_check(self.cookies)
         if black_list != []:
-            print("正在处理,请稍等...")
+            print("初始化中,请稍等...")
             for i in black_list:
                 self.black_list.append(get_real_roomid(i))
-                time.sleep(2)
-        self.check = login_check(self.cookies)
+                time.sleep(1)
         while self.check!=1:
             self.cookies_dic = Get_cookies(flag='1')
             self.cookies = joint_cookies_dic(self.cookies_dic)
