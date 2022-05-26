@@ -127,6 +127,17 @@ class Login_web(object):
             for i in black_list:
                 self.black_list.append(get_real_roomid(i))
                 time.sleep(0.5)
+                
+    def do_Sign(self):
+        url = 'https://api.live.bilibili.com/xlive/web-ucenter/v1/sign/DoSign'
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+            'origin': 'https://www.bilibili.com',
+            'sec-fetch-site': 'same-site',
+            'cookie': self.cookies
+        }
+        res = requests.get(url=url,headers=headers).json()
+        return res
     
     def get_medal_list(self):
         url = 'https://api.live.bilibili.com/xlive/app-ucenter/v1/fansMedal/panel?page=1&page_size=2000'
@@ -201,6 +212,7 @@ class Login_web(object):
         return res    
 
     def daka(self):
+        self.do_Sign()
         medal_list = self.get_medal_list()
         length = len(medal_list)
         counter = 0
