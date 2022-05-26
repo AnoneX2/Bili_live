@@ -6,7 +6,8 @@ import os
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 black_list=[] #不需要打卡的直播间号列表 用","分割
-share_list=[] #需要分享直播间的直播间号列表 用","分割 请勿多于24个
+'''直播间分享CD已降低为3s多一点，故取消分享白名单 共享打卡黑名单'''
+# share_list=[] #需要分享直播间的直播间号列表 用","分割 请勿多于24个 
 
 
 def Get_qrcode():
@@ -113,19 +114,19 @@ class Login_web(object):
         if not os.path.isdir('login'):
             os.makedirs('login')
         self.black_list=[]
-        self.share_list=share_list
+        # self.share_list=share_list
         self.cookies_dic = Get_cookies()
         self.cookies = joint_cookies_dic(self.cookies_dic)
         self.check = login_check(self.cookies)
-        if black_list != []:
-            print("初始化中,请稍等...")
-            for i in black_list:
-                self.black_list.append(get_real_roomid(i))
-                time.sleep(1)
         while self.check!=1:
             self.cookies_dic = Get_cookies(flag='1')
             self.cookies = joint_cookies_dic(self.cookies_dic)
             self.check = login_check(self.cookies)
+        if black_list != []:
+            print("初始化中,请稍等...")
+            for i in black_list:
+                self.black_list.append(get_real_roomid(i))
+                time.sleep(0.5)
     
     def get_medal_list(self):
         url = 'https://api.live.bilibili.com/xlive/app-ucenter/v1/fansMedal/panel?page=1&page_size=2000'
@@ -207,29 +208,14 @@ class Login_web(object):
             if i not in self.black_list:
                 if not self.send_msg(i,'打卡'):
                     self.send_msg(i,'(｀・ω・´)')
-                for _ in range(3):
+                for _ in range(5):
                     self.like(i)
-                    time.sleep(1)
+                    self.share(i)
+                    time.sleep(3.2)
             counter += 1
             print("每日打卡:%d/%d"%(counter,length))
         print('每日打卡完成')
-        length2 = len(self.share_list)
-        counter2 = 0
-        if length2 != 0:
-            print("正在分享直播间,由于每次分享有10分钟冷却时间,请耐心等待")
-            if length2 > 24:
-                print("分享直播间数量过多,仅取前24个")
-                self.share_list = self.share_list[0:24] 
-            for j in self.share_list:
-                roomid = get_real_roomid(j)
-                for _ in range(5):
-                    self.share(roomid)
-                    time.sleep(660)
-                counter2 += 1 
-                print("直播间分享:%d/%d"%(counter2,length2))
-            print('直播间分享完成')
-        else:
-            print("未添加分享的直播间")
+
 
     
 
