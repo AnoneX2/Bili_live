@@ -188,7 +188,11 @@ class Login_web(object):
             'csrf':csrf,
             'csrf_token':csrf
             }
-        res = requests.post(url=url, data= data ,headers= headers).json()
+        try:
+            res = requests.post(url=url, data= data ,headers= headers).json()
+        except Exception as e:
+            res = e
+            print(e)
         if res['message'] != '':
             print('在%s直播间发送"%s"失败'%(roomid,msg))
             return None
