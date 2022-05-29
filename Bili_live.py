@@ -13,17 +13,11 @@ black_list=[] #不需要打卡的直播间号列表 用","分割
 def Get_qrcode():
     headers = {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1'}
     url = 'https://passport.bilibili.com/qrcode/getLoginUrl'  
-    res = requests.get(url = url ,headers = headers)
-    
-    
-    
-    
-    ()  #请求登录二维码
+    res = requests.get(url = url ,headers = headers).json()  #请求登录二维码
     url2 = res['data']['url']
     res2 = requests.get(url = url2).url  #返回跳转后的url地址
     qr = qrcode.QRCode()
     qr.add_data(res2)    #将返回的url地址转换成二维码形式
-    # qr.print_ascii(invert=True)
     img = qr.make_image()
     img.show()
     return res['data']['oauthKey']
