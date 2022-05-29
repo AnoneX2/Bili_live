@@ -13,7 +13,12 @@ black_list=[] #不需要打卡的直播间号列表 用","分割
 def Get_qrcode():
     headers = {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1'}
     url = 'https://passport.bilibili.com/qrcode/getLoginUrl'  
-    res = requests.get(url = url ,headers = headers).json()  #请求登录二维码
+    res = requests.get(url = url ,headers = headers)
+    
+    
+    
+    
+    ()  #请求登录二维码
     url2 = res['data']['url']
     res2 = requests.get(url = url2).url  #返回跳转后的url地址
     qr = qrcode.QRCode()
@@ -136,8 +141,7 @@ class Login_web(object):
             'sec-fetch-site': 'same-site',
             'cookie': self.cookies
         }
-        res = requests.get(url=url,headers=headers).json()
-        return res
+        requests.get(url=url,headers=headers)
     
     def get_medal_list(self):
         url = 'https://api.live.bilibili.com/xlive/app-ucenter/v1/fansMedal/panel?page=1&page_size=2000'
@@ -167,8 +171,7 @@ class Login_web(object):
             'roomid':roomid,
             'csrf':csrf,
         }
-        res = requests.post(url=url,data=data,headers=headers).json()
-        return res
+        requests.post(url=url,data=data,headers=headers)
 
     def send_msg(self,roomid,msg):
         csrf = self.cookies_dic['bili_jct']
@@ -191,8 +194,9 @@ class Login_web(object):
         try:
             res = requests.post(url=url, data= data ,headers= headers).json()
         except Exception as e:
-            res = e
             print(e)
+            print('在%s直播间发送"%s"失败'%(roomid,msg))
+            return None
         if res['message'] != '':
             print('在%s直播间发送"%s"失败'%(roomid,msg))
             return None
@@ -212,8 +216,7 @@ class Login_web(object):
             'interact_type':3,
             'roomid':roomid,
         }
-        res = requests.post(url=url1,data=data,headers=headers).json()
-        return res    
+        requests.post(url=url1,data=data,headers=headers)
 
     def daka(self):
         self.do_Sign()
@@ -226,8 +229,10 @@ class Login_web(object):
                     self.send_msg(i,'(｀・ω・´)')
                 for _ in range(5):
                     self.like(i)
+                    time.sleep(1.6)
                     self.share(i)
-                    time.sleep(3.2)
+                    time.sleep(1.6)
+                    
             counter += 1
             print("每日打卡:%d/%d"%(counter,length))
         print('每日打卡完成')
