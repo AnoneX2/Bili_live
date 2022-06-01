@@ -149,7 +149,8 @@ class Login_web(object):
         medal_list= []
         for i in res['data']['list']:
             medal_list.append(i['room_info']['room_id'])
-        medal_list.append(res['data']['special_list'][0]['room_info']['room_id'])
+        for i in res['data']['special_list']:
+            medal_list.append(i['room_info']['room_id'])
         return medal_list
 
     def like(self,roomid):
