@@ -138,19 +138,33 @@ class Login_web(object):
         requests.get(url=url,headers=headers)
     
     def get_medal_list(self):
-        url = 'https://api.live.bilibili.com/xlive/app-ucenter/v1/fansMedal/panel?page=1&page_size=2000'
+        url = 'https://api.live.bilibili.com/xlive/app-ucenter/v1/fansMedal/panel'
         headers = {
                     'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
                     'origin': 'https://www.bilibili.com',
                     'sec-fetch-site': 'same-site',
                     'cookie': self.cookies
-                }
-        res = requests.get(url=url,headers=headers).json()
+        }
+        page=1
+        params={
+            "page_size":50,
+            "page":page
+        }
+        res = requests.get(url=url,headers=headers,params=params).json()
         medal_list= []
-        for i in res['data']['list']:
-            medal_list.append(i['room_info']['room_id'])
-        for i in res['data']['special_list']:
-            medal_list.append(i['room_info']['room_id'])
+        if res['data']['special_list']:
+            for i in res['data']['special_list']:
+                medal_list.append(i['room_info']['room_id'])
+        while res['data']['list']:
+            for i in res['data']['list']:
+                medal_list.append(i['room_info']['room_id'])
+            page +=1
+            params={
+                "page_size":50,
+                "page":page
+            }
+            time.sleep(0.5)
+            res = requests.get(url=url,headers=headers,params=params).json()
         return medal_list
 
     def like(self,roomid):
